@@ -1,0 +1,30 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Agent: create task",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoProfile",
+        "-File",
+        "${workspaceFolder}/scripts/new-task.ps1",
+        "${input:taskId}",
+        "${input:taskSlug}"
+      ],
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "taskId",
+      "type": "promptString",
+      "description": "Task ID, for example TASK-001"
+    },
+    {
+      "id": "taskSlug",
+      "type": "promptString",
+      "description": "Short task slug, for example fix-login-timeout"
+    }
+  ]
+}

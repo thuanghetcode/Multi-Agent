@@ -1,0 +1,12 @@
+.env
+.env.*
+!.env.example
+.claude/settings.local.json
+CLAUDE.local.md
+.codex-log/
+tasks/.tmp/
+node_modules/
+dist/
+build/
+coverage/
+.cache/

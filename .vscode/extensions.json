@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "Continue.continue",
+    "anthropic.claude-code",
+    "eamodio.gitlens",
+    "EditorConfig.EditorConfig"
+  ]
+}

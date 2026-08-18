@@ -1,0 +1,27 @@
+# Copy this to your Continue user config if desired.
+# Keep the real API key in an environment variable or Continue secret storage.
+name: Multi-Agent Template
+version: 1.0.0
+schema: v1
+models:
+  - name: GPT-5.6 Sol
+    provider: openai
+    model: req/gpt-5.6-sol
+    apiBase: https://api.stali.vn/v1
+    apiKey: ${{ secrets.STALI_API_KEY }}
+    roles:
+      - chat
+    capabilities:
+      - tool_use
+    chatOptions:
+      baseSystemMessage: Read project rules and use task artifacts. You are the director; do not modify product source or tests.
+      baseAgentSystemMessage: In normal Agent mode, write only tasks/active/** artifacts. During one-time bootstrap only, you may also update AGENTS.md and CLAUDE.md. Never modify product source or tests.
+      basePlanSystemMessage: Explore read-only and plan narrowly using the active task context.
+rules:
+  - uses: file://.continue/rules/director-role.md
+  - uses: file://.continue/rules/context-discipline.md
+context:
+  - provider: file
+  - provider: code
+  - provider: diff
+  - provider: terminal

@@ -1,0 +1,3 @@
+# Evidence directory
+
+Large command output may be stored here per task. Keep summaries and exit codes in `result.md`; do not paste unbounded logs into agent context.
