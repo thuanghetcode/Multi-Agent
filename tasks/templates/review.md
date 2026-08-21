@@ -9,9 +9,13 @@
 
 ## Acceptance criteria assessment
 
+Map each AC to whether it is met, with evidence.
+
 - AC-001: 
 
 ## Validation assessment
+
+Assess whether result.md validation evidence is complete and correct.
 
 ## Blocking findings
 
@@ -29,4 +33,3 @@ Use stable IDs. If none, write `None`.
 ## Scope assessment
 
 ## Residual risks
-

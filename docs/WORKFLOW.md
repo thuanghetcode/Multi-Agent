@@ -4,7 +4,9 @@
 
 - **GPT via Continue**: director; discussion, planning, review.
 - **Claude Code**: executor; implementation, tests, debugging, verification.
-- **Human**: approval and risk gate.
+- **Human**: approval, risk gate, and final commit/integration.
+
+This workflow is **human-orchestrated**: the human drives every phase transition by handoff prompt, approves the plan, and owns the final commit/integration. There is no automated orchestration runtime.
 
 ## States
 
@@ -28,6 +30,10 @@ READY_FOR_REVIEW
   -> READY_FOR_FINAL_REVIEW
   -> APPROVED | BLOCKED
 ```
+
+## Handoff rule
+
+Every handoff is by **task ID and repository artifact path**. Never copy/paste a full plan or conversation when the receiving agent can read the repository files. Short file-reference prompts are enough.
 
 ## First project request: automatic bootstrap
 
@@ -57,25 +63,70 @@ sau đó bootstrap repository và tạo plan đầu tiên. Không triển khai s
 
 1. Create a task:
    `pwsh -NoProfile -File scripts/new-task.ps1 TASK-001 short-task-name`
-2. GPT uses Continue Chat to clarify the request.
-3. GPT uses Plan mode to inspect only relevant context.
-4. GPT uses Agent mode briefly to write `brief.md` and `plan.md`.
-5. Human reviews `plan.md` and changes `Approval: PENDING` to `Approval: APPROVED`.
-6. Claude Code uses Plan/Manual mode to inspect, then implements only `Allowed Paths`.
-7. Claude runs the exact validation commands and writes `result.md`.
-8. GPT reviews `brief.md`, `plan.md`, `result.md`, and scoped Git diff.
-9. GPT writes `review.md` with exactly one verdict: `APPROVED`, `CHANGES_REQUIRED`, or `BLOCKED`.
-10. For `CHANGES_REQUIRED`, Claude fixes only listed finding IDs once, then re-verifies.
+2. Discuss with GPT:
+   ```text
+   Discuss tasks/active/TASK-001/brief.md
+   ```
+   GPT uses Continue Chat to clarify, then writes `brief.md`.
+3. Plan:
+   ```text
+   Plan tasks/active/TASK-001/brief.md
+   ```
+   GPT uses Plan mode to inspect only relevant context, then writes `plan.md`.
+4. Human reviews `plan.md` and changes `Approval: PENDING` to `Approval: APPROVED`.
+5. Implement (Claude Code, Manual/Plan mode):
+   ```text
+   Implement approved task TASK-001. Read tasks/active/TASK-001/plan.md first.
+   ```
+   Claude runs preflight, implements only `Allowed Paths`, runs exact validation commands, and writes `result.md` with per-AC evidence mapping.
+6. Review:
+   ```text
+   Review TASK-001. Read tasks/active/TASK-001/brief.md, plan.md, result.md and the scoped git diff.
+   ```
+   GPT writes `review.md` with exactly one verdict: `APPROVED`, `CHANGES_REQUIRED`, or `BLOCKED`.
+7. Fix (if `CHANGES_REQUIRED`):
+   ```text
+   Fix only findings REV-xxx in tasks/active/TASK-001/review.md, then re-verify.
+   ```
+   Claude fixes only listed finding IDs once, then re-verifies.
+8. Human commits and integrates the approved change. Agents never commit or push.
 
 ## Context and cost discipline
 
-- Do not transfer full conversations.
-- Use task artifacts and scoped Git diffs.
+- Do not transfer full conversations; use task artifacts and scoped Git diffs.
+- Load context progressively: start with the context manifest, add files on demand, never load the whole repository.
+- The plan's Context manifest uses `Required` (read always), `On-demand` (read only when its trigger condition is met), and `Excluded` (never read).
+- Record additional files loaded outside the manifest in `result.md`.
 - Search before opening files.
-- Load context manifest files first.
 - Keep logs outside artifacts when large; record command and exit code.
-- Start a fresh session for unrelated tasks.
-- Do not use subagents or agent teams in the default profile.
+
+## Preflight (Claude Code)
+
+Before editing, verify:
+
+1. Plan contains `Approval: APPROVED`.
+2. Required context files exist.
+3. Validation commands are present and runnable.
+4. Working tree is clean or changes are scoped to the task.
+5. Allowed Paths are understood and Forbidden Paths are respected.
+6. No unresolved behavioral questions remain (if so, mark `BLOCKED`).
+
+## Evidence mapping
+
+Each acceptance criterion in `result.md` maps to:
+
+- changed files that satisfy it;
+- the validation command and its exit code;
+- concise evidence or a log reference.
+
+Never claim success without executable evidence.
+
+## Retry behavior
+
+- Same validation failure: at most two **reasoned** attempts.
+- A reasoned attempt states: the failure, the hypothesized cause, the change, and why it should resolve it.
+- Repeating the identical failed action is not a reasoned attempt.
+- If the second reasoned attempt fails, stop with `BLOCKED`.
 
 ## Stop conditions
 

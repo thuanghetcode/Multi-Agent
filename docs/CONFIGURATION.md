@@ -34,12 +34,12 @@ Continue rules live in `.continue/rules/`; prompts live in `.continue/prompts/`.
 
 1. Install and sign in to Claude Code.
 2. Open the repository as a trusted VS Code folder.
-3. Review `.claude/settings.json` against the installed Claude Code schema/version.
+3. Configure **user-level** permissions for the operation categories you want Claude Code to deny or confirm globally (secrets, git push, destructive reset/clean, publish, deployment). These live in your user `settings.json`, not in the repository.
 4. Use Manual/Plan mode initially.
 5. Verify Claude refuses a plan whose approval is still `PENDING`.
-6. Keep `.claude/settings.local.json` uncommitted.
+6. Keep `.claude/settings.local.json` uncommitted if you create one.
 
-The project settings deny secrets, Git push, destructive reset/clean, publish, and selected deployment commands. Settings are guardrails, not a replacement for OS sandboxing, branch protection, or CI.
+Note: this template does **not** ship a committed project-level `.claude/settings.json`. Repository files such as `AGENTS.md` and `CLAUDE.md` are instructions, not enforcement. Actual permission enforcement — if any — comes from user-level Claude Code settings and from OS/CI controls such as branch protection and sandboxing. Guardrails are not a replacement for OS sandboxing, branch protection, or CI.
 
 ## Agent Skills
 
@@ -62,7 +62,7 @@ JSON files parse.
 Continue config loads.
 Continue Chat/Plan/Agent modes are available.
 Claude loads AGENTS.md and CLAUDE.md.
-Claude permissions deny protected operations.
+Claude user-level permissions deny protected operations.
 Task helper creates all four artifacts.
 Pending plan blocks implementation.
 Approved plan permits scoped implementation.

@@ -7,4 +7,6 @@ metadata:
 
 # Implement task
 
-Refuse to start unless `plan.md` contains `Approval: APPROVED`. Read the context manifest, modify only Allowed Paths, preserve unrelated changes, run exact validation commands, and write concise evidence to `result.md`. Stop for ambiguity, scope expansion, unavailable validation, or persistent failure.
+Canonical shared policy, preflight, reasoned retry, and loop limits are in `AGENTS.md`. Executor-specific deltas are in `CLAUDE.md`. This skill covers the implement-phase procedure only.
+
+Refuse to start unless `plan.md` contains `Approval: APPROVED`. Run the preflight checklist from `AGENTS.md` and `CLAUDE.md`. Read the context manifest, modify only Allowed Paths, preserve unrelated changes, run exact validation commands, and write concise evidence to `result.md` with per-AC mapping. Stop for ambiguity, scope expansion, unavailable validation, or persistent failure.

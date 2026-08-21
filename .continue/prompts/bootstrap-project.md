@@ -3,7 +3,9 @@ name: bootstrap-project
 description: Turn an initial project idea into repository instructions and the first pending task plan.
 ---
 
-This is the one-time project bootstrap. Read `AGENTS.md`, `CLAUDE.md`, project manifests, and the shallow repository structure. Discuss the user's idea and ask only questions whose answers affect product behavior, architecture, security, data, API contracts, or scope.
+This is the one-time project bootstrap. Canonical shared policy and workflow are in `AGENTS.md` and `docs/WORKFLOW.md`.
+
+Read `AGENTS.md`, `CLAUDE.md`, project manifests, and the shallow repository structure. Discuss the user's idea and ask only questions whose answers affect product behavior, architecture, security, data, API contracts, or scope.
 
 When the idea is sufficiently clear, in Agent mode:
 

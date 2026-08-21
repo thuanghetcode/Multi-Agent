@@ -7,4 +7,6 @@ metadata:
 
 # Review change
 
+Canonical shared policy is in `AGENTS.md`; this skill covers the review-phase procedure only.
+
 Read the task artifacts and scoped diff first. Check acceptance criteria, correctness, regression risk, security, scope, architecture, and validation evidence. Write one verdict in `review.md`: APPROVED, CHANGES_REQUIRED, or BLOCKED. Use stable finding IDs. Do not modify product source or tests.
