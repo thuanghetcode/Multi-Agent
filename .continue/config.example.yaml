@@ -8,7 +8,7 @@ models:
     provider: openai
     model: req/gpt-5.6-sol
     apiBase: https://api.thapi.could/v1
-    apiKey: ${{ secrets.STALI_API_KEY }}
+    apiKey: ${{ secrets.THAPI_API_KEY }}
     roles:
       - chat
     capabilities:
